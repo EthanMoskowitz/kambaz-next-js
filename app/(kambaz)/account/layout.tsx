@@ -9,7 +9,9 @@ export default function AccountLayout({
         <tbody>
           <tr>
             <td valign="top">
-              <AccountNavigation />
+              <div className="d-none d-md-block">
+                <AccountNavigation />
+              </div>
             </td>
             <td valign="top" width="100%">
               {children}
