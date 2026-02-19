@@ -8,8 +8,13 @@ import {
   FormLabel,
   Row,
 } from "react-bootstrap";
+import { useParams } from "next/navigation";
+import * as db from "../../../../database";
+import { navigate } from "next/dist/client/components/segment-cache/navigation";
 
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams();
+  const assignment = db.assignments.find((a: any) => a._id === aid);
   return (
     <div id="wd-assignments-editor">
       <Form.Group id="wd-name">
@@ -17,7 +22,7 @@ export default function AssignmentEditor() {
         <FormControl
           type="text"
           className="mb-3"
-          defaultValue={"A1 - ENV + HTML"}
+          defaultValue={assignment?.title}
         />
       </Form.Group>
       <Form.Group id="wd-description">
@@ -26,9 +31,7 @@ export default function AssignmentEditor() {
           className="mb-3"
           as="textarea"
           rows={5}
-          defaultValue={
-            "The assignment is available online Submit a link to the landing page of the assignment."
-          }
+          defaultValue={assignment?.description}
         />
       </Form.Group>
       <Form.Group as={Row} id="wd-points" className="mb-3">
@@ -36,7 +39,11 @@ export default function AssignmentEditor() {
           Points
         </FormLabel>
         <Col sm={10}>
-          <FormControl type="number" defaultValue={100} className="mb-3" />
+          <FormControl
+            type="number"
+            defaultValue={assignment?.points}
+            className="mb-3"
+          />
         </Col>
       </Form.Group>
       <Form.Group as={Row} id="wd-group" className="mb-3">
@@ -122,7 +129,7 @@ export default function AssignmentEditor() {
                 <FormLabel className="fw-bold">Due</FormLabel>
                 <FormControl
                   type="date"
-                  defaultValue="2026-01-01"
+                  defaultValue={assignment?.dueDate.split("T")[0]}
                   className="mb-3 float-end"
                 />
               </Form.Group>
@@ -133,7 +140,7 @@ export default function AssignmentEditor() {
                   <FormLabel className="fw-bold">Available From:</FormLabel>
                   <FormControl
                     type="date"
-                    defaultValue="2025-12-01"
+                    defaultValue={assignment?.availableFrom.split("T")[0]}
                     className="mb-3 float-end"
                   />
                 </Form.Group>
@@ -143,7 +150,7 @@ export default function AssignmentEditor() {
                   <FormLabel className="fw-bold">Until:</FormLabel>
                   <FormControl
                     type="date"
-                    defaultValue="2026-02-01"
+                    defaultValue={assignment?.dueDate.split("T")[0]}
                     className="mb-3 float-end"
                   />
                 </Form.Group>
@@ -155,11 +162,19 @@ export default function AssignmentEditor() {
       <table className="float-end">
         <tr>
           <td colSpan={5} align="right" valign="top">
-            <Button id="wd-cancel" variant="secondary">
+            <Button
+              id="wd-cancel"
+              variant="secondary"
+              href={`/courses/${cid}/assignments/`}
+            >
               Cancel
             </Button>
             &nbsp;
-            <Button id="wd-save" variant="danger">
+            <Button
+              id="wd-save"
+              variant="danger"
+              href={`/courses/${cid}/assignments/`}
+            >
               Save
             </Button>
           </td>
