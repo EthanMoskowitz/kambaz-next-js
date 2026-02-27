@@ -27,7 +27,7 @@ export default function AssignmentEditor() {
     (assignment) => assignment._id != aid,
   );
 
-  const [assignment, setAssignment] = useState(
+  const [assignment, setAssignment] = useState<any>(
     assignments.find((assignment: any) => assignment._id === aid) ?? {
       _id: aid,
       course: cid,
@@ -43,9 +43,9 @@ export default function AssignmentEditor() {
       studentAnnotation: false,
       fileUpload: false,
       assignTo: "Everyone",
-      dueDate: null,
-      availableFrom: null,
-      availableUntil: null,
+      dueDate: "",
+      availableFrom: "",
+      availableUntil: "",
     },
   );
 
@@ -109,7 +109,7 @@ export default function AssignmentEditor() {
           Assignment Group
         </FormLabel>
         <Col sm={10}>
-          <Form.Select value={assignment?.group || "assignments"}>
+          <Form.Select>
             <option value="assignments">Assignments</option>
             <option value="quizzes">Quizzes</option>
             <option value="exams">Exams</option>
