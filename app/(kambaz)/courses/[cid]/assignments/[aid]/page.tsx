@@ -31,6 +31,21 @@ export default function AssignmentEditor() {
     assignments.find((assignment: any) => assignment._id === aid) ?? {
       _id: aid,
       course: cid,
+      title: "",
+      description: "",
+      points: 0,
+      group: "assignments",
+      displayGradeAs: "percentage",
+      submissionType: "online",
+      textEntry: false,
+      websiteUrl: false,
+      mediaRecording: false,
+      studentAnnotation: false,
+      fileUpload: false,
+      assignTo: "Everyone",
+      dueDate: null,
+      availableFrom: null,
+      availableUntil: null,
     },
   );
 
