@@ -6,15 +6,46 @@ import {
   Form,
   FormControl,
   FormLabel,
+  ListGroup,
   Row,
 } from "react-bootstrap";
-import { useParams } from "next/navigation";
-import * as db from "../../../../database";
-import { navigate } from "next/dist/client/components/segment-cache/navigation";
+import { useRouter, useParams } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../store";
+import { addAssignment, updateAssignment } from "../reducer";
+import { useState } from "react";
 
 export default function AssignmentEditor() {
+  const router = useRouter();
   const { cid, aid } = useParams();
-  const assignment = db.assignments.find((a: any) => a._id === aid);
+  const { assignments } = useSelector(
+    (state: RootState) => state.assignmentReducer,
+  );
+  const dispatch = useDispatch();
+
+  const isNewAssignment = assignments.every(
+    (assignment) => assignment._id != aid,
+  );
+
+  const [assignment, setAssignment] = useState(
+    assignments.find((assignment: any) => assignment._id === aid) ?? {
+      _id: aid,
+      course: cid,
+    },
+  );
+
+  const handleSave = () => {
+    const toSave = isNewAssignment
+      ? { ...assignment, course: cid }
+      : assignment;
+    if (isNewAssignment) {
+      dispatch(addAssignment(toSave));
+    } else {
+      dispatch(updateAssignment(toSave));
+    }
+    router.push(`/courses/${cid}/assignments/`);
+  };
+
   return (
     <div id="wd-assignments-editor">
       <Form.Group id="wd-name">
@@ -22,7 +53,10 @@ export default function AssignmentEditor() {
         <FormControl
           type="text"
           className="mb-3"
-          defaultValue={assignment?.title}
+          value={assignment?.title || ""}
+          onChange={(e) =>
+            setAssignment({ ...assignment, title: e.target.value })
+          }
         />
       </Form.Group>
       <Form.Group id="wd-description">
@@ -31,7 +65,10 @@ export default function AssignmentEditor() {
           className="mb-3"
           as="textarea"
           rows={5}
-          defaultValue={assignment?.description}
+          value={assignment?.description || ""}
+          onChange={(e) =>
+            setAssignment({ ...assignment, description: e.target.value })
+          }
         />
       </Form.Group>
       <Form.Group as={Row} id="wd-points" className="mb-3">
@@ -41,8 +78,14 @@ export default function AssignmentEditor() {
         <Col sm={10}>
           <FormControl
             type="number"
-            defaultValue={assignment?.points}
+            value={assignment?.points || ""}
             className="mb-3"
+            onChange={(e) =>
+              setAssignment({
+                ...assignment,
+                points: parseInt(e.target.value) || 0,
+              })
+            }
           />
         </Col>
       </Form.Group>
@@ -51,7 +94,7 @@ export default function AssignmentEditor() {
           Assignment Group
         </FormLabel>
         <Col sm={10}>
-          <Form.Select defaultValue="assignments">
+          <Form.Select value={assignment?.group || "assignments"}>
             <option value="assignments">Assignments</option>
             <option value="quizzes">Quizzes</option>
             <option value="exams">Exams</option>
@@ -64,7 +107,10 @@ export default function AssignmentEditor() {
           Display Grade as
         </FormLabel>
         <Col sm={10}>
-          <Form.Select defaultValue="percentage" className="mb-3 float-end">
+          <Form.Select
+            value={assignment?.displayGradeAs || "percentage"}
+            className="mb-3 float-end"
+          >
             <option value="percentage">Percentage</option>
             <option value="points">Points</option>
             <option value="letter">Letter Grade</option>
@@ -77,7 +123,10 @@ export default function AssignmentEditor() {
         </FormLabel>
         <Col sm={10}>
           <Container className="p-3 m-0 border-10 border rounded border-gray">
-            <Form.Select defaultValue="online" className="mb-3 float-end">
+            <Form.Select
+              value={assignment?.submissionType || "online"}
+              className="mb-3 float-end"
+            >
               <option value="online">Online</option>
               <option value="paper">On Paper</option>
             </Form.Select>
@@ -87,23 +136,32 @@ export default function AssignmentEditor() {
                 type="checkbox"
                 id="wd-text-entry"
                 label="Text Entry"
+                checked={assignment?.textEntry || false}
               />
               <Form.Check
                 type="checkbox"
                 id="wd-website-url"
                 label="Website URL"
+                checked={assignment?.websiteUrl || false}
               />
               <Form.Check
                 type="checkbox"
                 id="wd-media-recording"
                 label="Media Recordings"
+                checked={assignment?.mediaRecording || false}
               />
               <Form.Check
                 type="checkbox"
                 id="wd-student"
                 label="Student Annotation"
+                checked={assignment?.studentAnnotation || false}
               />
-              <Form.Check type="checkbox" id="wd-file" label="File Uploads" />
+              <Form.Check
+                type="checkbox"
+                id="wd-file"
+                label="File Uploads"
+                checked={assignment?.fileUpload || false}
+              />
             </Form.Group>
           </Container>
         </Col>
@@ -119,7 +177,7 @@ export default function AssignmentEditor() {
                 <FormLabel className="fw-bold">Assign To:</FormLabel>
                 <FormControl
                   type="text"
-                  defaultValue="Everyone"
+                  value={assignment?.assignTo || "Everyone"}
                   className="mb-3 float-end"
                 />
               </Form.Group>
@@ -129,8 +187,17 @@ export default function AssignmentEditor() {
                 <FormLabel className="fw-bold">Due</FormLabel>
                 <FormControl
                   type="date"
-                  defaultValue={assignment?.dueDate.split("T")[0]}
+                  value={
+                    assignment?.dueDate
+                      ? typeof assignment.dueDate === "string"
+                        ? assignment.dueDate.split("T")[0]
+                        : assignment.dueDate
+                      : ""
+                  }
                   className="mb-3 float-end"
+                  onChange={(e) =>
+                    setAssignment({ ...assignment, dueDate: e.target.value })
+                  }
                 />
               </Form.Group>
             </Row>
@@ -140,8 +207,20 @@ export default function AssignmentEditor() {
                   <FormLabel className="fw-bold">Available From:</FormLabel>
                   <FormControl
                     type="date"
-                    defaultValue={assignment?.availableFrom.split("T")[0]}
+                    value={
+                      assignment?.availableFrom
+                        ? typeof assignment.availableFrom === "string"
+                          ? assignment.availableFrom.split("T")[0]
+                          : assignment.availableFrom
+                        : ""
+                    }
                     className="mb-3 float-end"
+                    onChange={(e) =>
+                      setAssignment({
+                        ...assignment,
+                        availableFrom: e.target.value,
+                      })
+                    }
                   />
                 </Form.Group>
               </Col>
@@ -150,8 +229,20 @@ export default function AssignmentEditor() {
                   <FormLabel className="fw-bold">Until:</FormLabel>
                   <FormControl
                     type="date"
-                    defaultValue={assignment?.dueDate.split("T")[0]}
+                    value={
+                      assignment?.availableUntil
+                        ? typeof assignment.availableUntil === "string"
+                          ? assignment.availableUntil.split("T")[0]
+                          : assignment.availableUntil
+                        : ""
+                    }
                     className="mb-3 float-end"
+                    onChange={(e) =>
+                      setAssignment({
+                        ...assignment,
+                        availableUntil: e.target.value,
+                      })
+                    }
                   />
                 </Form.Group>
               </Col>
@@ -159,27 +250,31 @@ export default function AssignmentEditor() {
           </Container>
         </Col>
       </Form.Group>
-      <table className="float-end">
-        <tr>
-          <td colSpan={5} align="right" valign="top">
-            <Button
-              id="wd-cancel"
-              variant="secondary"
-              href={`/courses/${cid}/assignments/`}
-            >
-              Cancel
-            </Button>
-            &nbsp;
-            <Button
-              id="wd-save"
-              variant="danger"
-              href={`/courses/${cid}/assignments/`}
-            >
-              Save
-            </Button>
-          </td>
-        </tr>
-      </table>
+      <ListGroup className="float-end">
+        <ListGroup.Item className="border-0">
+          <Button
+            id="wd-cancel"
+            variant="secondary"
+            onClick={(e) => {
+              e.preventDefault();
+              handleSave();
+            }}
+          >
+            Cancel
+          </Button>
+          &nbsp;
+          <Button
+            id="wd-save"
+            variant="danger"
+            onClick={(e) => {
+              e.preventDefault();
+              handleSave();
+            }}
+          >
+            Save
+          </Button>
+        </ListGroup.Item>
+      </ListGroup>
     </div>
   );
 }

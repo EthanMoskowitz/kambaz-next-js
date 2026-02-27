@@ -7,7 +7,8 @@ import { BsGripVertical } from "react-icons/bs";
 import { MdAssignment } from "react-icons/md";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { useParams } from "next/navigation";
-import * as db from "../../../database";
+import { RootState } from "../../../store";
+import { useSelector } from "react-redux";
 
 function formatDate(dateInput: string | Date) {
   const date = new Date(dateInput);
@@ -26,7 +27,11 @@ function formatDate(dateInput: string | Date) {
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments;
+
+  const { assignments } = useSelector(
+    (state: RootState) => state.assignmentReducer,
+  );
+  console.log(assignments);
   return (
     <div id="wd-assignments">
       <AssignmentControl />
@@ -75,7 +80,7 @@ export default function Assignments() {
                     </div>
                   </Col>
                   <Col className="float-end">
-                    <AssignmentControlButtons />
+                    <AssignmentControlButtons assignmentId={assignment._id} />
                   </Col>
                 </Row>
               </div>

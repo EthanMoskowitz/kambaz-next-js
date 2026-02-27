@@ -1,8 +1,11 @@
+import Link from "next/link";
 import { Button, FormControl, InputGroup } from "react-bootstrap";
 import InputGroupText from "react-bootstrap/esm/InputGroupText";
 import { CiSearch } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
+import { v4 as uuidv4 } from "uuid";
 export default function AssignmentControl() {
+  const id = uuidv4();
   return (
     <div id="wd-modules-controls" className="text-nowrap">
       <div className="float-start">
@@ -17,15 +20,17 @@ export default function AssignmentControl() {
           />
         </InputGroup>
       </div>
-      <Button
-        variant="danger"
-        size="lg"
-        className="me-1 float-end"
-        id="wd-add-module-btn"
-      >
-        <FaPlus />
-        Assignment
-      </Button>
+      <Link href={`./assignments/${id}`}>
+        <Button
+          variant="danger"
+          size="lg"
+          className="me-1 float-end"
+          id="wd-add-module-btn"
+        >
+          <FaPlus />
+          Assignment
+        </Button>
+      </Link>
       <Button
         variant="secondary"
         size="lg"
