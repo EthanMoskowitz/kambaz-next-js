@@ -17,10 +17,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { addNewCourse, deleteCourse, updateCourse } from "../courses/reducer";
 import { RootState } from "../store";
 export default function Dashboard() {
+  interface User {
+    _id: string;
+    name: string;
+    email: string;
+  }
+
   const { courses } = useSelector((state: RootState) => state.coursesReducer);
   const { currentUser } = useSelector(
     (state: RootState) => state.accountReducer,
-  );
+  ) as { currentUser: User | null };
   const { enrollments } = useSelector(
     (state: RootState) => state.enrollmentReducer,
   );
