@@ -19,9 +19,17 @@ import { RootState } from "../store";
 export default function Dashboard() {
   interface User {
     _id: string;
-    name: string;
+    username: string;
+    password: string;
+    firstName: string;
+    lastName: string;
     email: string;
+    dob: string;
     role: string;
+    loginId: string;
+    section: string;
+    lastActivity: string;
+    totalActivity: string;
   }
 
   const { courses } = useSelector((state: RootState) => state.coursesReducer);
