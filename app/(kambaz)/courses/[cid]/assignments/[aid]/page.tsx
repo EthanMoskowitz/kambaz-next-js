@@ -23,6 +23,10 @@ export default function AssignmentEditor() {
   );
   const dispatch = useDispatch();
 
+  const isStudent = useSelector(
+    (state: RootState) => state.accountReducer.currentUser?.role === "STUDENT",
+  );
+
   const isNewAssignment = assignments.every(
     (assignment) => assignment._id != aid,
   );
@@ -72,6 +76,7 @@ export default function AssignmentEditor() {
           onChange={(e) =>
             setAssignment({ ...assignment, title: e.target.value })
           }
+          disabled={isStudent}
         />
       </Form.Group>
       <Form.Group id="wd-description">
@@ -84,6 +89,7 @@ export default function AssignmentEditor() {
           onChange={(e) =>
             setAssignment({ ...assignment, description: e.target.value })
           }
+          disabled={isStudent}
         />
       </Form.Group>
       <Form.Group as={Row} id="wd-points" className="mb-3">
@@ -101,6 +107,7 @@ export default function AssignmentEditor() {
                 points: parseInt(e.target.value) || 0,
               })
             }
+            disabled={isStudent}
           />
         </Col>
       </Form.Group>
@@ -109,7 +116,14 @@ export default function AssignmentEditor() {
           Assignment Group
         </FormLabel>
         <Col sm={10}>
-          <Form.Select>
+          <Form.Select
+            value={assignment?.group || "assignments"}
+            className="mb-3 float-end"
+            disabled={isStudent}
+            onChange={(e) =>
+              setAssignment({ ...assignment, group: e.target.value })
+            }
+          >
             <option value="assignments">Assignments</option>
             <option value="quizzes">Quizzes</option>
             <option value="exams">Exams</option>
@@ -125,6 +139,10 @@ export default function AssignmentEditor() {
           <Form.Select
             value={assignment?.displayGradeAs || "percentage"}
             className="mb-3 float-end"
+            disabled={isStudent}
+            onChange={(e) =>
+              setAssignment({ ...assignment, displayGradeAs: e.target.value })
+            }
           >
             <option value="percentage">Percentage</option>
             <option value="points">Points</option>
@@ -141,6 +159,10 @@ export default function AssignmentEditor() {
             <Form.Select
               value={assignment?.submissionType || "online"}
               className="mb-3 float-end"
+              disabled={isStudent}
+              onChange={(e) =>
+                setAssignment({ ...assignment, submissionType: e.target.value })
+              }
             >
               <option value="online">Online</option>
               <option value="paper">On Paper</option>
@@ -152,30 +174,56 @@ export default function AssignmentEditor() {
                 id="wd-text-entry"
                 label="Text Entry"
                 checked={assignment?.textEntry || false}
+                disabled={isStudent}
+                onChange={(e) =>
+                  setAssignment({ ...assignment, textEntry: e.target.checked })
+                }
               />
               <Form.Check
                 type="checkbox"
                 id="wd-website-url"
                 label="Website URL"
                 checked={assignment?.websiteUrl || false}
+                disabled={isStudent}
+                onChange={(e) =>
+                  setAssignment({ ...assignment, websiteUrl: e.target.checked })
+                }
               />
               <Form.Check
                 type="checkbox"
                 id="wd-media-recording"
                 label="Media Recordings"
                 checked={assignment?.mediaRecording || false}
+                disabled={isStudent}
+                onChange={(e) =>
+                  setAssignment({
+                    ...assignment,
+                    mediaRecording: e.target.checked,
+                  })
+                }
               />
               <Form.Check
                 type="checkbox"
                 id="wd-student"
                 label="Student Annotation"
                 checked={assignment?.studentAnnotation || false}
+                disabled={isStudent}
+                onChange={(e) =>
+                  setAssignment({
+                    ...assignment,
+                    studentAnnotation: e.target.checked,
+                  })
+                }
               />
               <Form.Check
                 type="checkbox"
                 id="wd-file"
                 label="File Uploads"
                 checked={assignment?.fileUpload || false}
+                disabled={isStudent}
+                onChange={(e) =>
+                  setAssignment({ ...assignment, fileUpload: e.target.checked })
+                }
               />
             </Form.Group>
           </Container>
@@ -194,6 +242,10 @@ export default function AssignmentEditor() {
                   type="text"
                   value={assignment?.assignTo || "Everyone"}
                   className="mb-3 float-end"
+                  disabled={isStudent}
+                  onChange={(e) =>
+                    setAssignment({ ...assignment, assignTo: e.target.value })
+                  }
                 />
               </Form.Group>
             </Row>
@@ -213,6 +265,7 @@ export default function AssignmentEditor() {
                   onChange={(e) =>
                     setAssignment({ ...assignment, dueDate: e.target.value })
                   }
+                  disabled={isStudent}
                 />
               </Form.Group>
             </Row>
@@ -236,6 +289,7 @@ export default function AssignmentEditor() {
                         availableFrom: e.target.value,
                       })
                     }
+                    disabled={isStudent}
                   />
                 </Form.Group>
               </Col>
@@ -258,6 +312,7 @@ export default function AssignmentEditor() {
                         availableUntil: e.target.value,
                       })
                     }
+                    disabled={isStudent}
                   />
                 </Form.Group>
               </Col>
@@ -265,31 +320,35 @@ export default function AssignmentEditor() {
           </Container>
         </Col>
       </Form.Group>
-      <ListGroup className="float-end">
-        <ListGroup.Item className="border-0">
-          <Button
-            id="wd-cancel"
-            variant="secondary"
-            onClick={(e) => {
-              e.preventDefault();
-              handleSave();
-            }}
-          >
-            Cancel
-          </Button>
-          &nbsp;
-          <Button
-            id="wd-save"
-            variant="danger"
-            onClick={(e) => {
-              e.preventDefault();
-              handleSave();
-            }}
-          >
-            Save
-          </Button>
-        </ListGroup.Item>
-      </ListGroup>
+      {!isStudent && (
+        <>
+          <ListGroup className="float-end">
+            <ListGroup.Item className="border-0">
+              <Button
+                id="wd-cancel"
+                variant="secondary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/courses/${cid}/assignments/`);
+                }}
+              >
+                Cancel
+              </Button>
+              &nbsp;
+              <Button
+                id="wd-save"
+                variant="danger"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSave();
+                }}
+              >
+                Save
+              </Button>
+            </ListGroup.Item>
+          </ListGroup>
+        </>
+      )}
     </div>
   );
 }

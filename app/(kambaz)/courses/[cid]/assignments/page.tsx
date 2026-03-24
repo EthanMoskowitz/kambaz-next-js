@@ -32,13 +32,21 @@ export default function Assignments() {
     (state: RootState) => state.assignmentReducer,
   );
   console.log(assignments);
+
+  const isStudent = useSelector(
+    (state: RootState) => state.accountReducer.currentUser?.role === "STUDENT",
+  );
   return (
     <div id="wd-assignments">
-      <AssignmentControl />
-      <br />
-      <br />
-      <br />
-      <br />
+      {!isStudent && (
+        <>
+          <AssignmentControl />
+          <br />
+          <br />
+          <br />
+          <br />
+        </>
+      )}
       <ListGroup className="rounded-0" id="wd-assignments">
         <ListGroupItem className="wd-assignments p-0 fs-5 border-gray">
           <div className="wd-title p-3 ps-2 bg-light">
@@ -80,7 +88,9 @@ export default function Assignments() {
                     </div>
                   </Col>
                   <Col className="float-end">
-                    <AssignmentControlButtons assignmentId={assignment._id} />
+                    {!isStudent && (
+                      <AssignmentControlButtons assignmentId={assignment._id} />
+                    )}
                   </Col>
                 </Row>
               </div>
