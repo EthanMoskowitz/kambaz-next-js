@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Link from "next/link";
 import AssignmentControlHeader from "./AssignmentControlHeader";
@@ -8,7 +9,10 @@ import { MdAssignment } from "react-icons/md";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { useParams } from "next/navigation";
 import { RootState } from "../../../store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import * as client from "./client";
+import { setAssignments } from "./reducer";
+import { useEffect } from "react";
 
 function formatDate(dateInput: string | Date) {
   const date = new Date(dateInput);
@@ -27,15 +31,25 @@ function formatDate(dateInput: string | Date) {
 
 export default function Assignments() {
   const { cid } = useParams();
+  const dispatch = useDispatch();
 
   const { assignments } = useSelector(
     (state: RootState) => state.assignmentReducer,
   );
-  console.log(assignments);
+
+  const fetchAssignments = async () => {
+    if (!cid) return;
+    const assignments = await client.fetchAssignments(cid as string);
+    dispatch(setAssignments(assignments));
+  };
 
   const isStudent = useSelector(
     (state: RootState) => state.accountReducer.currentUser?.role === "STUDENT",
   );
+
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
   return (
     <div id="wd-assignments">
       {!isStudent && (
@@ -55,47 +69,45 @@ export default function Assignments() {
             Assignments
           </div>
         </ListGroupItem>
-        {assignments
-          .filter((assignment: any) => assignment.course === cid)
-          .map((assignment: any) => (
-            // eslint-disable-next-line react/jsx-key
-            <ListGroupItem className="wd-assignment-list-item p-0 fs-5 border-gray border-left-green">
-              <div className="p-3 ps-2 bg-light">
-                <Row className="align-items-center">
-                  <Col className="col-auto">
-                    <BsGripVertical className="me-2 fs-3 float-start" />
-                  </Col>
-                  <Col className="col-auto">
-                    <MdAssignment
-                      className="me-2 fs-3 float-start"
-                      color="green"
-                    />
-                  </Col>
-                  <Col className="col-auto">
-                    <Link
-                      href={`/courses/${cid}/assignments/${assignment._id}`}
-                      className="wd-assignment-link"
-                    >
-                      {assignment.title}
-                    </Link>
-                    <div className="wd-assignment-details">
-                      <span style={{ color: "red" }}>Multiple Modules</span> |{" "}
-                      <b>Not available until</b>{" "}
-                      {formatDate(assignment.availableFrom)} |
-                      <br />
-                      <b>Due</b> {formatDate(assignment.dueDate)} |{" "}
-                      {assignment.points}pts
-                    </div>
-                  </Col>
-                  <Col className="float-end">
-                    {!isStudent && (
-                      <AssignmentControlButtons assignmentId={assignment._id} />
-                    )}
-                  </Col>
-                </Row>
-              </div>
-            </ListGroupItem>
-          ))}
+        {assignments.map((assignment: any) => (
+          // eslint-disable-next-line react/jsx-key
+          <ListGroupItem className="wd-assignment-list-item p-0 fs-5 border-gray border-left-green">
+            <div className="p-3 ps-2 bg-light">
+              <Row className="align-items-center">
+                <Col className="col-auto">
+                  <BsGripVertical className="me-2 fs-3 float-start" />
+                </Col>
+                <Col className="col-auto">
+                  <MdAssignment
+                    className="me-2 fs-3 float-start"
+                    color="green"
+                  />
+                </Col>
+                <Col className="col-auto">
+                  <Link
+                    href={`/courses/${cid}/assignments/${assignment._id}`}
+                    className="wd-assignment-link"
+                  >
+                    {assignment.title}
+                  </Link>
+                  <div className="wd-assignment-details">
+                    <span style={{ color: "red" }}>Multiple Modules</span> |{" "}
+                    <b>Not available until</b>{" "}
+                    {formatDate(assignment.availableFrom)} |
+                    <br />
+                    <b>Due</b> {formatDate(assignment.dueDate)} |{" "}
+                    {assignment.points}pts
+                  </div>
+                </Col>
+                <Col className="float-end">
+                  {!isStudent && (
+                    <AssignmentControlButtons assignmentId={assignment._id} />
+                  )}
+                </Col>
+              </Row>
+            </div>
+          </ListGroupItem>
+        ))}
       </ListGroup>
     </div>
   );

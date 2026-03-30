@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IoEllipsisVertical } from "react-icons/io5";
 import GreenCheckmark from "../modules/GreenCheckmark";
 import { Button, Modal } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { BiTrash } from "react-icons/bi";
-import { deleteAssignment } from "./reducer";
+import { setAssignments } from "./reducer";
+import { RootState } from "../../../store";
+import * as client from "./client";
 export default function AssignmentControlButtons({
   assignmentId,
 }: {
@@ -12,6 +15,17 @@ export default function AssignmentControlButtons({
 }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dispatch = useDispatch();
+
+  const { assignments } = useSelector(
+    (state: RootState) => state.assignmentReducer,
+  );
+
+  const onDeleteAssignment = async (assignmentId: string) => {
+    await client.deleteAssignment(assignmentId);
+    dispatch(
+      setAssignments(assignments.filter((a: any) => a._id !== assignmentId)),
+    );
+  };
   return (
     <div className="float-end">
       <GreenCheckmark />
@@ -33,7 +47,7 @@ export default function AssignmentControlButtons({
           <Button
             variant="primary"
             onClick={() => {
-              dispatch(deleteAssignment(assignmentId));
+              onDeleteAssignment(assignmentId);
               setShowDeleteModal(false);
             }}
           >

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
   Button,
@@ -14,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import { addAssignment, updateAssignment } from "../reducer";
 import { useState } from "react";
+import * as client from "../client";
 
 export default function AssignmentEditor() {
   const router = useRouter();
@@ -23,12 +25,29 @@ export default function AssignmentEditor() {
   );
   const dispatch = useDispatch();
 
+  const onCreateAssignmentForCourse = async (assignment: any) => {
+    if (!cid) return;
+    const newAssignment = { ...assignment, course: cid };
+    const createdAssignment = await client.createAssignmentForCourse(
+      cid as string,
+      newAssignment,
+    );
+    dispatch(addAssignment(createdAssignment));
+    router.push(`/courses/${cid}/assignments/`);
+  };
+
+  const onUpdateAssignment = async (assignment: any) => {
+    await client.updateAssignment(assignment);
+    dispatch(updateAssignment(assignment));
+    router.push(`/courses/${cid}/assignments/`);
+  };
+
   const isStudent = useSelector(
     (state: RootState) => state.accountReducer.currentUser?.role === "STUDENT",
   );
 
   const isNewAssignment = assignments.every(
-    (assignment) => assignment._id != aid,
+    (assignment: any) => assignment._id != aid,
   );
 
   const [assignment, setAssignment] = useState<any>(
@@ -58,9 +77,9 @@ export default function AssignmentEditor() {
       ? { ...assignment, course: cid }
       : assignment;
     if (isNewAssignment) {
-      dispatch(addAssignment(toSave));
+      onCreateAssignmentForCourse(toSave);
     } else {
-      dispatch(updateAssignment(toSave));
+      onUpdateAssignment(toSave);
     }
     router.push(`/courses/${cid}/assignments/`);
   };
