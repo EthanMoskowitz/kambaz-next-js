@@ -1,0 +1,218 @@
+[
+  {
+    "_id": "A101",
+    "title": "Propulsion Assignment",
+    "description": "Analyze the fundamental rocket propulsion equations and calculate thrust for given parameters.",
+    "course": "RS101",
+    "points": 100,
+    "availableFrom": "2023-01-15T00:00:00",
+    "dueDate": "2023-02-05T23:59:00"
+  },
+  {
+    "_id": "A102",
+    "title": "Combustion Analysis",
+    "description": "Evaluate combustion efficiency and stability in liquid rocket engines.",
+    "course": "RS101",
+    "points": 100,
+    "availableFrom": "2023-02-10T00:00:00",
+    "dueDate": "2023-03-01T23:59:00"
+  },
+  {
+    "_id": "A103",
+    "title": "Nozzle Design Project",
+    "description": "Design and optimize a converging-diverging nozzle for maximum performance.",
+    "course": "RS101",
+    "points": 150,
+    "availableFrom": "2023-03-15T00:00:00",
+    "dueDate": "2023-04-20T23:59:00"
+  },
+  {
+    "_id": "A201",
+    "title": "Aerodynamics Quiz",
+    "description": "Quiz covering fluid properties, lift, and drag fundamentals.",
+    "course": "RS102",
+    "points": 50,
+    "availableFrom": "2023-01-20T00:00:00",
+    "dueDate": "2023-02-01T23:59:00"
+  },
+  {
+    "_id": "A202",
+    "title": "Flow Analysis",
+    "description": "Analyze subsonic and supersonic flow behavior in various scenarios.",
+    "course": "RS102",
+    "points": 100,
+    "availableFrom": "2023-02-15T00:00:00",
+    "dueDate": "2023-03-10T23:59:00"
+  },
+  {
+    "_id": "A203",
+    "title": "Heating Analysis",
+    "description": "Evaluate aerodynamic heating effects during atmospheric re-entry.",
+    "course": "RS102",
+    "points": 120,
+    "availableFrom": "2023-03-20T00:00:00",
+    "dueDate": "2023-04-25T23:59:00"
+  },
+  {
+    "_id": "A301",
+    "title": "Structural Design Task",
+    "description": "Perform structural load calculations for a spacecraft launch scenario.",
+    "course": "RS103",
+    "points": 100,
+    "availableFrom": "2023-01-18T00:00:00",
+    "dueDate": "2023-02-12T23:59:00"
+  },
+  {
+    "_id": "A302",
+    "title": "Orbital Calculations",
+    "description": "Compute orbital parameters and plan a Hohmann transfer.",
+    "course": "RS103",
+    "points": 120,
+    "availableFrom": "2023-02-20T00:00:00",
+    "dueDate": "2023-03-20T23:59:00"
+  },
+  {
+    "_id": "A303",
+    "title": "Systems Engineering Exam",
+    "description": "Comprehensive assessment of spacecraft subsystems and integration.",
+    "course": "RS103",
+    "points": 150,
+    "availableFrom": "2023-04-01T00:00:00",
+    "dueDate": "2023-05-05T23:59:00"
+  },
+  {
+    "_id": "A401",
+    "title": "Hydrocarbon Reaction Worksheet",
+    "description": "Practice problems covering hydrocarbons and functional group reactions.",
+    "course": "RS104",
+    "points": 80,
+    "availableFrom": "2023-01-25T00:00:00",
+    "dueDate": "2023-02-15T23:59:00"
+  },
+  {
+    "_id": "A402",
+    "title": "Mechanism Problem Set",
+    "description": "Analyze and draw detailed organic reaction mechanisms.",
+    "course": "RS104",
+    "points": 100,
+    "availableFrom": "2023-02-20T00:00:00",
+    "dueDate": "2023-03-15T23:59:00"
+  },
+  {
+    "_id": "A403",
+    "title": "Spectroscopy Lab Report",
+    "description": "Interpret NMR and IR spectra to determine molecular structure.",
+    "course": "RS104",
+    "points": 120,
+    "availableFrom": "2023-03-25T00:00:00",
+    "dueDate": "2023-04-30T23:59:00"
+  },
+  {
+    "_id": "A501",
+    "title": "Coordination Complex Analysis",
+    "description": "Examine bonding and geometry in coordination compounds.",
+    "course": "RS105",
+    "points": 100,
+    "availableFrom": "2023-01-22T00:00:00",
+    "dueDate": "2023-02-18T23:59:00"
+  },
+  {
+    "_id": "A502",
+    "title": "Crystal Field Calculations",
+    "description": "Calculate crystal field splitting energies for various complexes.",
+    "course": "RS105",
+    "points": 100,
+    "availableFrom": "2023-02-25T00:00:00",
+    "dueDate": "2023-03-22T23:59:00"
+  },
+  {
+    "_id": "A503",
+    "title": "Catalysis Research Summary",
+    "description": "Summarize modern applications of inorganic catalysts.",
+    "course": "RS105",
+    "points": 120,
+    "availableFrom": "2023-03-28T00:00:00",
+    "dueDate": "2023-05-01T23:59:00"
+  },
+  {
+    "_id": "A601",
+    "title": "Thermodynamics Problem Set",
+    "description": "Solve problems involving entropy, enthalpy, and Gibbs free energy.",
+    "course": "RS106",
+    "points": 100,
+    "availableFrom": "2023-01-30T00:00:00",
+    "dueDate": "2023-02-20T23:59:00"
+  },
+  {
+    "_id": "A602",
+    "title": "Kinetics Rate Law Analysis",
+    "description": "Determine reaction orders and calculate rate constants.",
+    "course": "RS106",
+    "points": 100,
+    "availableFrom": "2023-02-28T00:00:00",
+    "dueDate": "2023-03-28T23:59:00"
+  },
+  {
+    "_id": "A603",
+    "title": "Quantum Chemistry Exam",
+    "description": "Assessment covering quantum models and molecular orbitals.",
+    "course": "RS106",
+    "points": 150,
+    "availableFrom": "2023-04-05T00:00:00",
+    "dueDate": "2023-05-10T23:59:00"
+  },
+  {
+    "_id": "A701",
+    "title": "Elvish Translation Exercise",
+    "description": "Translate passages between English and Quenya.",
+    "course": "RS107",
+    "points": 75,
+    "availableFrom": "2023-01-18T00:00:00",
+    "dueDate": "2023-02-10T23:59:00"
+  },
+  {
+    "_id": "A702",
+    "title": "Runic Inscription Project",
+    "description": "Create and analyze inscriptions using Tengwar or Cirth.",
+    "course": "RS107",
+    "points": 100,
+    "availableFrom": "2023-02-20T00:00:00",
+    "dueDate": "2023-03-25T23:59:00"
+  },
+  {
+    "_id": "A703",
+    "title": "Language Structure Analysis",
+    "description": "Analyze grammar structures across Middle-earth languages.",
+    "course": "RS107",
+    "points": 125,
+    "availableFrom": "2023-03-30T00:00:00",
+    "dueDate": "2023-05-05T23:59:00"
+  },
+  {
+    "_id": "A801",
+    "title": "Alliance Case Study",
+    "description": "Examine diplomatic alliances during the Second Age.",
+    "course": "RS108",
+    "points": 100,
+    "availableFrom": "2023-01-25T00:00:00",
+    "dueDate": "2023-02-20T23:59:00"
+  },
+  {
+    "_id": "A802",
+    "title": "Diplomatic Strategy Paper",
+    "description": "Write a paper analyzing inter-species conflict resolution.",
+    "course": "RS108",
+    "points": 125,
+    "availableFrom": "2023-02-28T00:00:00",
+    "dueDate": "2023-04-05T23:59:00"
+  },
+  {
+    "_id": "A803",
+    "title": "War of the Ring Policy Analysis",
+    "description": "Evaluate leadership and alliance strategies in the War of the Ring.",
+    "course": "RS108",
+    "points": 150,
+    "availableFrom": "2023-04-10T00:00:00",
+    "dueDate": "2023-05-12T23:59:00"
+  }
+]
