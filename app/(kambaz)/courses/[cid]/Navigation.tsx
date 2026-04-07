@@ -19,11 +19,11 @@ export default function CourseNavigation() {
       {links.map((link) => (
         <Link
           key={link}
-          href={`/courses/${cid}/${link === "People" ? "people/table" : link.toLowerCase()}`}
+          href={`/courses/${cid}/${link === "People" ? "people" : link.toLowerCase()}`}
           id={`wd-course-${link.toLowerCase()}-link`}
           className={
             pathname ===
-            `/courses/${cid}/${link === "People" ? "people/table" : link.toLowerCase()}`
+            `/courses/${cid}/${link === "People" ? "people" : link.toLowerCase()}`
               ? "list-group-item active border-0"
               : "list-group-item text-danger border-0"
           }
