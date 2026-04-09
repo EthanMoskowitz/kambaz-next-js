@@ -1,11 +1,22 @@
 "use client";
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
-import * as db from "../../../database";
 import { useParams } from "next/navigation";
+import * as client from "../../../dashboard/client";
+import { useEffect, useState } from "react";
 export default function PeopleTable() {
   const { cid } = useParams();
-  const { users, enrollments } = db;
+  const [users, setUsers] = useState([]);
+  const fetchUsers = async () => {
+    if (!cid) return;
+    const users = await client.fetchUsersForCourse(cid as string);
+    setUsers(users);
+  };
+  useEffect(() => {
+    if (!cid) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchUsers();
+  }, [cid]);
   return (
     <div id="wd-people-table">
       <Table striped>
@@ -21,18 +32,12 @@ export default function PeopleTable() {
         </thead>
         <tbody>
           {users
-            .filter((usr) =>
-              enrollments.some(
-                (enrollment) =>
-                  enrollment.user === usr._id && enrollment.course === cid,
-              ),
-            )
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .map((user: any) => (
               <tr key={user._id}>
                 <td className="wd-full-name text-nowrap">
                   <FaUserCircle className="me-2 fs-1 text-secondary" />
-                  <span className="wd-first-name">{user.firstName}</span>
+                  <span className="wd-first-name">{user.firstName}</span>{" "}
                   <span className="wd-last-name">{user.lastName}</span>
                 </td>
                 <td className="wd-login-id">{user.loginId}</td>

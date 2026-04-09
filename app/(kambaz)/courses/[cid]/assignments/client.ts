@@ -8,6 +8,7 @@ export const fetchAssignments = async (courseID: string) => {
   const response = await axiosWithCredentials.get(
     `${COURSES_API}/${courseID}/assignments`,
   );
+  console.log("Fetched assignments for course", response.data);
   return response.data;
 };
 
@@ -22,17 +23,20 @@ export const createAssignmentForCourse = async (
   return response.data;
 };
 
-export const updateAssignment = async (assignment: any) => {
+export const updateAssignment = async (courseID: string, assignment: any) => {
   const response = await axiosWithCredentials.put(
-    `${ASSIGNMENTS_API}/${assignment._id}`,
+    `${COURSES_API}/${courseID}/assignments/${assignment._id}`,
     assignment,
   );
   return response.data;
 };
 
-export const deleteAssignment = async (assignmentID: string) => {
+export const deleteAssignment = async (
+  courseID: string,
+  assignmentID: string,
+) => {
   const response = await axiosWithCredentials.delete(
-    `${ASSIGNMENTS_API}/${assignmentID}`,
+    `${COURSES_API}/${courseID}/assignments/${assignmentID}`,
   );
   return response.data;
 };

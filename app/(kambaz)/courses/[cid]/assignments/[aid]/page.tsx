@@ -37,7 +37,7 @@ export default function AssignmentEditor() {
   };
 
   const onUpdateAssignment = async (assignment: any) => {
-    await client.updateAssignment(assignment);
+    await client.updateAssignment(cid as string, assignment);
     dispatch(updateAssignment(assignment));
     router.push(`/courses/${cid}/assignments/`);
   };
