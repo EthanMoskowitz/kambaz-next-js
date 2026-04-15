@@ -13,14 +13,8 @@ import {
   FormControl,
   Row,
 } from "react-bootstrap";
-import { addEnrollment, deleteEnrollment, setEnrollments } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addNewCourse,
-  deleteCourse,
-  updateCourse,
-  setCourses,
-} from "../courses/reducer";
+import { setCourses } from "../courses/reducer";
 import { RootState } from "../store";
 import * as client from "../courses/client";
 import * as enrollmentClient from "../dashboard/client";
@@ -41,9 +35,6 @@ export default function Dashboard() {
   }
 
   const { courses } = useSelector((state: RootState) => state.coursesReducer);
-  const { enrollments } = useSelector(
-    (state: RootState) => state.enrollmentReducer,
-  ) as { enrollments: any[] };
   const { currentUser } = useSelector(
     (state: RootState) => state.accountReducer,
   ) as { currentUser: User | null };
@@ -74,11 +65,15 @@ export default function Dashboard() {
 
   const onAddNewCourse = async () => {
     const newCourse = await client.createCourse(course);
+    setAllCourses([...allCourses, newCourse]);
+    if (!currentUser) return;
+    await enrollmentClient.enrollInCourse(currentUser._id, newCourse._id);
     dispatch(setCourses([...courses, newCourse]));
   };
 
   const onDeleteCourse = async (courseId: string) => {
-    const status = await client.deleteCourse(courseId);
+    await client.deleteCourse(courseId);
+    setAllCourses(allCourses.filter((course) => course._id !== courseId));
     dispatch(setCourses(courses.filter((course) => course._id !== courseId)));
   };
 
@@ -95,75 +90,40 @@ export default function Dashboard() {
         }),
       ),
     );
-  };
-
-  const fetchEnrollments = async () => {
-    if (!currentUser) return;
-    const enrollments = await enrollmentClient.fetchEnrollments();
-    dispatch(setEnrollments(enrollments));
+    setAllCourses(
+      allCourses.map((c) => {
+        if (c._id === course._id) {
+          return course;
+        } else {
+          return c;
+        }
+      }),
+    );
   };
 
   const onEnroll = async (courseId: string) => {
     if (!currentUser) return;
-    try {
-      const newEnrollmentID = await enrollmentClient.enrollInCourse({
-        user: currentUser._id,
-        course: courseId,
-      });
-      const newEnrollment = {
-        _id: newEnrollmentID,
-        user: currentUser._id,
-        course: courseId,
-      };
-      dispatch(setEnrollments([...enrollments, newEnrollment]));
-      dispatch(
-        setCourses([...courses, allCourses.find((c) => c._id === courseId)]),
-      );
-      console.log("Enrolling in course", newEnrollment);
-    } catch (error) {
-      console.error("Failed to enroll:", error);
-    }
+    await enrollmentClient.enrollInCourse(currentUser._id, courseId);
+    dispatch(
+      setCourses([...courses, allCourses.find((c) => c._id === courseId)]),
+    );
   };
 
   const onUnenroll = async (courseId: string) => {
     if (!currentUser) return;
-
-    const enrollmentToRemove = enrollments.find((enrollment) => {
-      const enrollmentUser =
-        typeof enrollment.user === "string"
-          ? enrollment.user
-          : enrollment.user?._id;
-      const enrollmentCourse =
-        typeof enrollment.course === "string"
-          ? enrollment.course
-          : enrollment.course?._id;
-
-      return (
-        String(enrollmentUser) === String(currentUser._id) &&
-        String(enrollmentCourse) === String(courseId)
-      );
-    });
-
-    if (!enrollmentToRemove?._id) return;
-
-    try {
-      console.log("Unenrolling from course", enrollmentToRemove);
-      await enrollmentClient.unenrollFromCourse(enrollmentToRemove._id);
-      dispatch(
-        setEnrollments(
-          enrollments.filter((e) => e._id !== enrollmentToRemove._id),
-        ),
-      );
-      dispatch(setCourses(courses.filter((course) => course._id !== courseId)));
-    } catch (error) {
-      console.error("Failed to unenroll:", error);
-    }
+    await enrollmentClient.unenrollFromCourse(currentUser?._id, courseId);
+    dispatch(setCourses(courses.filter((course) => course._id !== courseId)));
   };
 
   const fetchCourses = async () => {
     try {
-      const courses = await client.findMyCourses();
+      if (!currentUser) return;
+      const courses = await enrollmentClient.fetchCoursesForEnrolledUser(
+        currentUser?._id,
+      );
+      console.log("Fetched courses for enrolled user", courses);
       dispatch(setCourses(courses));
+      console.log("Courses in state after fetch:", courses);
     } catch (error) {
       console.error(error);
     }
@@ -172,7 +132,6 @@ export default function Dashboard() {
     fetchCourses();
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAllCourses();
-    fetchEnrollments();
   }, [currentUser]);
 
   const coursesToShow = showAllEnrollments ? allCourses : courses;
@@ -238,12 +197,11 @@ export default function Dashboard() {
               <Card>
                 <Link
                   href={
-                    enrollments.some(
-                      (enrollment) =>
+                    courses.some(
+                      (courseCheck) =>
                         currentUser !== null &&
                         currentUser?._id !== null &&
-                        enrollment.user === currentUser._id &&
-                        enrollment.course === course._id,
+                        courseCheck._id === course._id,
                     )
                       ? `/courses/${course._id}/home`
                       : ""
@@ -293,10 +251,8 @@ export default function Dashboard() {
                     )}
                     {currentUser !== null && currentUser?._id !== null && (
                       <>
-                        {enrollments.some(
-                          (enrollment) =>
-                            enrollment.user === currentUser._id &&
-                            enrollment.course === course._id,
+                        {courses.some(
+                          (courseCheck) => courseCheck._id === course._id,
                         ) ? (
                           <Button
                             id="wd-unenroll-click"

@@ -8,11 +8,13 @@ import { BiTrash } from "react-icons/bi";
 import { setAssignments } from "./reducer";
 import { RootState } from "../../../store";
 import * as client from "./client";
+import { useParams } from "next/navigation";
 export default function AssignmentControlButtons({
   assignmentId,
 }: {
   assignmentId: any;
 }) {
+  const { cid } = useParams();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dispatch = useDispatch();
 
@@ -21,7 +23,7 @@ export default function AssignmentControlButtons({
   );
 
   const onDeleteAssignment = async (assignmentId: string) => {
-    await client.deleteAssignment(assignmentId);
+    await client.deleteAssignment(cid as string, assignmentId);
     dispatch(
       setAssignments(assignments.filter((a: any) => a._id !== assignmentId)),
     );
