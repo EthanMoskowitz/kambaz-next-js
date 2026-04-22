@@ -6,6 +6,7 @@ import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { RiTeamLine } from "react-icons/ri";
 export default function KambazNavigation() {
   const pathname = usePathname();
   const links = [
@@ -14,6 +15,7 @@ export default function KambazNavigation() {
     { label: "Calendar", path: "/calendar", icon: IoCalendarOutline },
     { label: "Inbox", path: "/inbox", icon: FaInbox },
     { label: "Labs", path: "/labs", icon: LiaCogSolid },
+    { label: "Team", path: "/team", icon: RiTeamLine },
   ];
 
   return (
