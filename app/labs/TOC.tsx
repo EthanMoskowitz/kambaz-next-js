@@ -70,6 +70,11 @@ export default function TOC() {
           My GitHub
         </NavLink>
       </NavItem>
+      <NavItem>
+        <NavLink href="/team" as={Link}>
+          Team Page
+        </NavLink>
+      </NavItem>
     </Nav>
   );
 }

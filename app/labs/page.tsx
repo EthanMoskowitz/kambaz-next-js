@@ -42,6 +42,11 @@ export default function labs() {
             GitHub
           </Link>
         </li>
+        <li>
+          <Link href="/team" id="wd-team-link">
+            Team Page
+          </Link>
+        </li>
       </ul>
     </div>
   );
