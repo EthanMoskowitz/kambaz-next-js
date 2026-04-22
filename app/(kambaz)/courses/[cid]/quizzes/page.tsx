@@ -188,11 +188,7 @@ export default function Quizzes() {
                         </>
                       )}
                       {" | "}
-                      {quiz.questions?.reduce(
-                        (sum: number, q: any) => sum + (q.points || 0),
-                        0,
-                      ) || 0}{" "}
-                      pts{" | "}
+                      {quiz.points} pts{" | "}
                       {quiz.questions?.length || 0} Questions
                       {isStudent && scores[quiz._id] !== undefined && (
                         <>
